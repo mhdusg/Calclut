@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تین دونات | محاسبه‌گر قیمت</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#20130d;
+    --bg2:#2b1a12;
+    --card:#332017;
+    --card2:#3e281b;
+    --line:#4a3122;
+    --pink:#ff5c8a;
+    --pink-d:#3a1520;
+    --yellow:#ffcb47;
+    --yellow-d:#3a2c10;
+    --mint:#4ed9b0;
+    --mint-d:#12332a;
+    --orange:#ff9a4d;
+    --orange-d:#3a2412;
+    --blue:#6fb8ff;
+    --blue-d:#122a3a;
+    --cream:#f8ede0;
+    --muted:#c9ae97;
+    --danger:#ff6b6b;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, var(--bg2), var(--bg) 60%);
+    color:var(--cream);
+    font-family:'Vazirmatn',sans-serif;
+    min-height:100vh;
+    padding-bottom:40px;
+  }
+  header{
+    padding:22px 16px 8px;
+    text-align:center;
+  }
+  header h1{
+    margin:0;
+    font-size:22px;
+    font-weight:800;
+    background:linear-gradient(90deg,var(--pink),var(--yellow));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    letter-spacing:.5px;
+  }
+  header p{
+    margin:4px 0 0;
+    color:var(--muted);
+    font-size:12.5px;
+  }
+
+  nav.tabs{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:16px 14px 10px;
+    scrollbar-width:none;
+  }
+  nav.tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    padding:4px 2px;
+    color:var(--muted);
+    font-family:inherit;
+  }
+  .tab-btn .ring{
+    width:44px;height:44px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--card);
+    border:2px solid var(--line);
+    transition:.15s;
+  }
+  .tab-btn.active .ring{
+    border-color:var(--tab-color, var(--pink));
+    background:var(--tab-color-d, var(--pink-d));
+    box-shadow:0 0 0 4px color-mix(in srgb, var(--tab-color,var(--pink)) 15%, transparent);
+  }
+  .tab-btn span{font-size:10.5px;font-weight:600;white-space:nowrap;}
+  .tab-btn.active{color:var(--cream);}
+  .tab-btn.active span{color:var(--tab-color,var(--pink));}
+
+  main{padding:6px 14px 24px; max-width:640px; margin:0 auto;}
+  .section-title{
+    font-size:14px;font-weight:700;margin:18px 0 8px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;
+  }
+  .section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--pink);}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px;
+    margin-bottom:12px;
+  }
+  .row{display:flex;gap:8px;}
+  .field{flex:1;display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+  .field label{font-size:11px;color:var(--muted);}
+  input[type=text], input[type=number], select{
+    background:var(--bg2);
+    border:1px solid var(--line);
+    color:var(--cream);
+    border-radius:10px;
+    padding:9px 10px;
+    font-family:inherit;
+    font-size:13.5px;
+    width:100%;
+  }
+  input::placeholder{color:#8a6f5c;}
+  input:focus, select:focus{outline:2px solid var(--pink); outline-offset:1px;}
+
+  .btn{
+    background:var(--pink);
+    color:#2a0f18;
+    border:none;
+    border-radius:10px;
+    padding:9px 14px;
+    font-family:inherit;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn.secondary{background:var(--card2); color:var(--cream); border:1px solid var(--line);}
+  .btn.mint{background:var(--mint); color:#08261d;}
+  .btn.block{width:100%;}
+  .btn-icon{
+    background:none;border:none;color:var(--danger);cursor:pointer;font-size:15px;padding:4px 6px;
+  }
+
+  .item-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:9px 0;border-bottom:1px solid var(--line);
+    font-size:13px;
+  }
+  .item-row:last-child{border-bottom:none;}
+  .item-row .meta{color:var(--muted); font-size:11.5px;}
+  .item-row .name{font-weight:600;}
+  .item-row .price{color:var(--yellow); font-weight:700; white-space:nowrap;}
+
+  .empty{color:var(--muted); font-size:12.5px; text-align:center; padding:14px 0;}
+
+  .pill{
+    display:inline-block; padding:2px 9px; border-radius:20px; font-size:10.5px; font-weight:700;
+  }
+  .pill.qanadi{background:var(--pink-d); color:var(--pink);}
+  .pill.plastic{background:var(--blue-d); color:var(--blue);}
+  .pill.other{background:var(--mint-d); color:var(--mint);}
+
+  .card-header{
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+  }
+  .card-header .title-input{
+    font-weight:700; font-size:15px; background:transparent; border:none; color:var(--cream);
+    border-bottom:1px dashed var(--line); padding:2px 0; width:auto; max-width:60%;
+  }
+
+  .cost-line{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 12px; border-radius:12px; margin-top:8px; font-size:13px;
+  }
+  .cost-line.total{
+    background:linear-gradient(90deg, var(--pink-d), var(--yellow-d));
+    font-weight:800; font-size:15px;
+  }
+  .cost-line .val{color:var(--yellow); font-weight:800;}
+
+  .selector-row{
+    display:flex; gap:6px; margin-bottom:8px;
+  }
+  .selector-row select{flex:1.4;}
+  .selector-row input{flex:.8;}
+  .selector-row button{flex:.6;}
+
+  .checkbox-row{
+    display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted); margin-bottom:10px;
+  }
+  .checkbox-row input{width:16px;height:16px;accent-color:var(--pink);}
+
+  .menu-group{margin-bottom:18px;}
+  .menu-group h3{
+    font-size:13px; margin:0 0 8px; color:var(--muted); display:flex; align-items:center; gap:6px;
+  }
+  .menu-item{
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:11px 13px; margin-bottom:8px;
+  }
+  .menu-item .name{font-weight:700; font-size:13.5px;}
+  .menu-item .sub{font-size:11px; color:var(--muted); margin-top:2px;}
+  .menu-item .price{font-size:16px; font-weight:800; color:var(--yellow); white-space:nowrap;}
+
+  .hint{font-size:11px;color:var(--muted); margin-top:-2px; margin-bottom:8px; line-height:1.7;}
+  .saved-badge{
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--mint); color:#08261d; font-weight:700; font-size:12px;
+    padding:7px 16px; border-radius:20px; opacity:0; transition:.25s;
+    pointer-events:none; max-width:88%; text-align:center;
+  }
+  .saved-badge.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .saved-badge.error{
+    background:var(--danger); color:#3a0808; pointer-events:auto; cursor:pointer;
+  }
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(10,5,2,.7);
+    z-index:60; display:flex; align-items:flex-end; justify-content:center;
+  }
+  .modal-sheet{
+    background:var(--card); width:100%; max-width:640px; max-height:88vh;
+    overflow-y:auto; border-radius:20px 20px 0 0; padding:16px 16px 24px;
+    border:1px solid var(--line); border-bottom:none;
+  }
+  .modal-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+  .modal-header h3{margin:0; font-size:15px;}
+  .picker-tabs{display:flex; gap:6px; overflow-x:auto; margin-bottom:10px; scrollbar-width:none;}
+  .picker-tabs::-webkit-scrollbar{display:none;}
+  .picker-tab{
+    flex:0 0 auto; padding:7px 13px; border-radius:20px; background:var(--bg2);
+    border:1px solid var(--line); color:var(--muted); font-size:12px; font-family:inherit; cursor:pointer;
+  }
+  .picker-tab.active{background:var(--pink-d); color:var(--pink); border-color:var(--pink);}
+  .picker-list{max-height:44vh; overflow-y:auto;}
+  .picker-row{
+    display:flex; align-items:flex-start; gap:10px; padding:10px 4px;
+    border-bottom:1px solid var(--line); font-size:13px; cursor:pointer;
+  }
+  .picker-row input[type=checkbox]{width:18px; height:18px; accent-color:var(--pink); flex-shrink:0; margin-top:2px;}
+  .picker-row .sub{color:var(--muted); font-size:11px; margin-top:2px;}
+  .amount-step{text-align:center; padding:8px 0 4px;}
+  .amount-step .progress{font-size:11.5px; color:var(--muted); margin-bottom:6px;}
+  .amount-step .item-name{font-size:16px; font-weight:700; margin-bottom:14px;}
+  .amount-step input{font-size:18px; text-align:center; padding:12px;}
+.item-row.stale{background:rgba(255,107,107,.09);border-right:3px solid var(--danger);padding-right:8px;}
+  .menu-item.low{border-color:var(--danger);background:#3a1818;}
+  .menu-item.low .price{color:var(--danger);}
+  .stale-badge{color:var(--danger);font-size:10.5px;font-weight:700;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍩 تین دونات</h1>
+  <p>محاسبه‌گر قیمت تمام‌شده و قیمت فروش</p>
+  <button class="btn secondary" id="backupToggle" style="margin-top:10px; font-size:11.5px; padding:6px 12px;" onclick="toggleBackup()">💾 پشتیبان‌گیری دستی</button>
+</header>
+
+<div id="backupPanel" style="display:none; max-width:640px; margin:0 auto 8px; padding:0 14px;">
+  <div class="card">
+    <div class="hint">اگه ذخیره‌ی خودکار کار نکرد، این متن رو کپی کن و یه جای امن (مثلا نوت گوشیت) نگه دار. هروقت خواستی برگردونی، همون متن رو تو کادر پایین پیست کن و بزن «بازیابی».</div>
+    <label style="font-size:11px;color:var(--muted);">خروجی فعلی (برای کپی کردن)</label>
+    <textarea id="backupOut" rows="4" readonly style="width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--cream);border-radius:10px;padding:9px 10px;font-family:monospace;font-size:11px;resize:vertical;margin:6px 0;"></textarea>
+    <button class="btn mint block" onclick="copyBackup()">📋 کپی کردن</button>
+    <div style="height:14px;"></div>
+    <label style="font-size:11px;color:var(--muted);">بازیابی از متن پشتیبان</label>
+    <textarea id="backupIn" rows="4" placeholder="متن پشتیبان رو اینجا پیست کن..." style="width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--cream);border-radius:10px;padding:9px 10px;font-family:monospace;font-size:11px;resize:vertical;margin:6px 0;"></textarea>
+    <button class="btn secondary block" onclick="restoreBackup()">♻️ بازیابی</button>
+    <div style="height:14px;"></div>
+    <button class="btn mint block" onclick="importTD()">🍩 بارگذاری مواد و فرمول‌ها از اکسل</button>
+  </div>
+</div>
+
+<nav class="tabs" id="tabs"></nav>
+<main id="main"></main>
+<div class="saved-badge" id="savedBadge" onclick="if(this.classList.contains('error')) attemptSave()">ذخیره شد</div>
+
+<div class="modal-overlay" id="modalOverlay" style="display:none;" onclick="if(event.target===this) closeModal()">
+  <div class="modal-sheet" id="modalSheet"></div>
+</div>
+
+<script>
+/* ============ STATE ============ */
+const STORAGE_KEY = 'pricing-state';
+let state = {
+  materials: { qanadi: [], plastic: [], other: [] },
+  labor: [],
+  base: { items: [], yield: 1 },
+  donuts: [],
+  hotDrinks: [],
+  coldDrinks: []
+};
+let activeTab = 'materials';
+
+const TABS = [
+  { id:'materials', label:'مواد اولیه', color:'var(--yellow)', colorD:'var(--yellow-d)', icon:matIcon() },
+  { id:'stale',     label:'قیمت قدیمی', color:'var(--danger)', colorD:'var(--pink-d)', icon:clockIcon() },
+  { id:'labor',     label:'نیروی کار',  color:'var(--mint)',   colorD:'var(--mint-d)',   icon:laborIcon() },
+  { id:'base',      label:'بیس دونات',  color:'var(--pink)',   colorD:'var(--pink-d)',   icon:donutIcon('var(--pink)') },
+  { id:'donuts',    label:'دونات‌ها',   color:'var(--pink)',   colorD:'var(--pink-d)',   icon:donutIcon('var(--pink)') },
+  { id:'hot',       label:'نوشیدنی گرم',color:'var(--orange)', colorD:'var(--orange-d)', icon:cupIcon('var(--orange)') },
+  { id:'cold',      label:'نوشیدنی سرد',color:'var(--blue)',   colorD:'var(--blue-d)',   icon:cupIcon('var(--blue)') },
+  { id:'menu',      label:'منو نهایی',  color:'var(--cream)',  colorD:'var(--card2)',    icon:menuIcon() },
+  { id:'low',       label:'کم‌سود',     color:'var(--danger)', colorD:'var(--pink-d)',   icon:warnIcon() },
+];
+
+function clockIcon(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;}
+function warnIcon(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 4l9 15H3L12 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4M12 17v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;}
+function matIcon(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="2"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;}
+function laborIcon(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="2"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;}
+function donutIcon(c){return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="${c}" stroke-width="2.5"/><circle cx="12" cy="12" r="3" stroke="${c}" stroke-width="2"/><circle cx="12" cy="5.5" r="1" fill="${c}"/><circle cx="17" cy="9" r="1" fill="${c}"/><circle cx="7" cy="9" r="1" fill="${c}"/></svg>`;}
+function cupIcon(c){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 8h12l-1.2 10.2a2 2 0 01-2 1.8H9.2a2 2 0 01-2-1.8L6 8z" stroke="${c}" stroke-width="2"/><path d="M6 8V6a2 2 0 012-2h8a2 2 0 012 2v2" stroke="${c}" stroke-width="2"/></svg>`;}
+function menuIcon(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 4h14M5 10h14M5 16h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;}
+
+const TD_PRELOAD = {"materials":[["لیوان تک",5000.0,1.0,"عدد","plastic"],["لیوان دابل",5000.0,1.0,"عدد","plastic"],["لیوان ۳۶۰",17000,1.0,"عدد","plastic"],["لیوان ۱۸۰",1200.0,1.0,"عدد","plastic"],["قهوه",3000000,1000.0,"گرم","qanadi"],["فیلتر کافی",150000,100.0,"عدد","other"],["بستنی",850000,3000.0,"گرم","qanadi"],["شیر",130000,1000.0,"میلی‌لیتر","qanadi"],["شکلات تلخ",900000,1000.0,"گرم","qanadi"],["کارامل",400000,500.0,"گرم","qanadi"],["نوتلا",2500000,1000.0,"گرم","qanadi"],["پودر هات چاکلت",1200000,1000.0,"گرم","qanadi"],["فندق",4500000,1000.0,"گرم","qanadi"],["شکلات فندقی",1200000,1000.0,"گرم","qanadi"],["تی بگ",123500,100.0,"عدد","qanadi"],["نبات",79000,50.0,"عدد","qanadi"],["گرین بگ",100000,20.0,"عدد","qanadi"],["عسل",200000,1000.0,"گرم","qanadi"],["پودر نسکافه",1000000,48.0,"ساشه","qanadi"],["ساشه شکر",150000,150.0,"عدد","qanadi"],["شیر نارگیل",100000,4.0,"عدد","qanadi"],["پودر ماسالا",1200000,1000.0,"گرم","qanadi"],["پودر وایت چاکلت",900000,1000.0,"گرم","qanadi"],["پودر دارک چاکلت",1500000,1000.0,"گرم","qanadi"],["پودر پینک چاکلت",900000,1000.0,"گرم","qanadi"],["قاشق",2000,1.0,"عدد","plastic"],["قند بسته ای",250000,200.0,"عدد","qanadi"],["شکلات اسپرسو",3500,1.0,"عدد","qanadi"],["پودر چای کرک",1000000,1000.0,"گرم","qanadi"],["لیوان و نی (نوشیدنی سرد)",18000,1.0,"عدد","plastic"],["فرمند",1200000,1000.0,"گرم","qanadi"],["پودر کاکائو",2100000,1000.0,"گرم","qanadi"],["هیس",1200000,24.0,"عدد","qanadi"],["مربا توت",500000,500.0,"گرم","qanadi"],["سیروپ توت",1000000,900.0,"میلی‌لیتر","qanadi"],["چی پف",100000,1.0,"عدد","qanadi"],["انبه",700000,1000.0,"گرم","qanadi"],["موز",400000,1000.0,"گرم","qanadi"],["گره بادوم",900000,1000.0,"گرم","qanadi"],["ارئو",200000,12.0,"عدد","qanadi"],["یخ",140000,3000.0,"گرم","qanadi"],["آب لیمو",400000,1500.0,"میلی‌لیتر","qanadi"],["سیروپ لیمو",100000,900.0,"میلی‌لیتر","qanadi"],["آب سودا",100000,1000.0,"میلی‌لیتر","qanadi"],["سیروپ نعنا",1200000,9000.0,"میلی‌لیتر","qanadi"],["هندوانه",80000,1000.0,"گرم","qanadi"],["طالبی",120000,1000.0,"گرم","qanadi"],["شاه توت",500000,1000.0,"گرم","qanadi"],["بستنی شاه توت",1000000,3000.0,"گرم","qanadi"],["شکر",150000,1000.0,"گرم","qanadi"],["براونی",350000,1.0,"عدد","qanadi"],["توت فرنگی",300000,1000.0,"گرم","qanadi"],["شکلات پسته",700000.0,1000.0,"گرم","qanadi"],["شکلات سفید",600000.0,1000.0,"گرم","qanadi"],["شکلات شکلاتی",600000.0,1000.0,"گرم","qanadi"],["شکلات موزی",600000.0,1000.0,"گرم","qanadi"],["شکلات توت فرنگی",600000.0,1000.0,"گرم","qanadi"],["اسمارتیز",600000.0,1000.0,"گرم","qanadi"],["شکلات نسکافه",600000.0,1000.0,"گرم","qanadi"],["دارچین",800000.0,1000.0,"گرم","qanadi"],["شیر عسل",300000.0,387.0,"میلی‌لیتر","qanadi"],["پودر نارگیل",900000.0,1000.0,"گرم","qanadi"],["زنجبیل",800000.0,1000.0,"گرم","qanadi"],["قند",150000.0,1000.0,"گرم","qanadi"],["آرد",3500000.0,40000.0,"گرم","qanadi"],["نمک",20000.0,1000.0,"گرم","qanadi"],["پودر قند",150000.0,1000.0,"گرم","qanadi"],["بکینگ پودر",500000.0,5000.0,"گرم","qanadi"],["بهبود",1000000.0,1000.0,"گرم","qanadi"],["گلوتن",350000.0,1000.0,"گرم","qanadi"],["آب پنیر",300000.0,1000.0,"گرم","qanadi"],["وانیل",1000000.0,500.0,"گرم","qanadi"],["تخم",700000.0,30.0,"عدد","qanadi"],["خمیر مایه",300000.0,500.0,"گرم","qanadi"],["روغن سرخ کردنی",6500000.0,16000.0,"گرم","qanadi"],["روغن مایع",650000.0,1350.0,"گرم","qanadi"],["ظرف دونات",7390.0,1.0,"عدد","plastic"],["دستکش",50000.0,100.0,"عدد","other"],["چاقو",200000.0,100.0,"عدد","other"],["دستمال",55000.0,100.0,"عدد","other"],["خامه",0,0,"بسته","qanadi"],["ترافل",0,0,"کیلو","qanadi"],["کیت کت",0,0,"عدد","qanadi"],["اسنیکرز",0,0,"عدد","qanadi"],["قهوه عربیکا",0,0,"کیلو","qanadi"],["قهوه ۷۰/۳۰",0,0,"کیلو","qanadi"],["نسکافه",0,0,"بسته","qanadi"],["چای",0,0,"بسته","qanadi"],["آب معدنی",0,0,"بسته","qanadi"],["درب لیوان ۳۶۰",0,0,"عدد","plastic"],["لیوان شیک",0,0,"گرم","plastic"],["آستری",0,0,"رول","plastic"],["نی مغازه",0,0,"گرم","plastic"],["نی اسنپ",0,0,"گرم","plastic"],["پاکت اسنپ",0,0,"کیلو","plastic"],["پک اسنپ",0,0,"گرم","plastic"],["لیبل",0,0,"گرم","plastic"],["ظرف تکی",0,0,"کیلو","plastic"],["ظرف دوتایی",0,0,"کیلو","plastic"],["هولدر دوتایی",0,0,"کیلو","plastic"],["هولدر چهارتایی",0,0,"گرم","plastic"],["کاغذ روغنی",0,0,"کیلو","plastic"],["سلفون",0,0,"رول","plastic"],["کیسه ۳ کیلویی شیری",0,0,"کیلو","plastic"],["کیسه فریزر",0,0,"بسته","plastic"],["رول دستگاه پوز",0,0,"عدد","plastic"],["دستمال کاغذی",0,0,"بسته","other"],["کیسه زباله بزرگ",0,0,"کیلو","other"],["کیسه زباله متوسط",0,0,"کیلو","other"],["کیسه زباله کوچک",0,0,"بسته","other"],["کیسه زباله سرویس بهداشتی",0,0,"بسته","other"],["پاک کننده چند منظوره",0,0,"عدد","other"],["شیشه پاک کن",0,0,"عدد","other"],["شوکول",0,0,"بسته","other"]],"base":{"items":[["آرد",3150.0],["نمک",8.0],["پودر قند",200.0],["بکینگ پودر",26.0],["بهبود",35.0],["گلوتن",54.0],["آب پنیر",38.0],["وانیل",16.0],["تخم",6.0],["خمیر مایه",80.0],["روغن مایع",60.0],["ظرف دونات",1.0],["دستکش",65.0],["چاقو",65.0],["دستمال",195.0],["روغن سرخ کردنی",1430.0]],"yield":65},"donuts":[{"n":"دونات فندقی","i":[["شکلات فندقی",35.0]],"b":true,"m":2.87},{"n":"دونات فندقی دابل","i":[["شکلات فندقی",60.0]],"b":true,"m":2.87},{"n":"دونات پسته","i":[["شکلات پسته",35.0]],"b":true,"m":2.87},{"n":"دونات پسته دابل","i":[["شکلات پسته",60.0]],"b":true,"m":2.87},{"n":"دونات نوتلا","i":[["نوتلا",35.0]],"b":true,"m":2.87},{"n":"دونات نوتلا دابل","i":[["نوتلا",60.0]],"b":true,"m":2.87},{"n":"دونات سفید","i":[["شکلات سفید",35.0]],"b":true,"m":2.87},{"n":"دونات سفید دابل","i":[["شکلات سفید",60.0]],"b":true,"m":2.87},{"n":"دونات شکلات","i":[["شکلات شکلاتی",35.0]],"b":true,"m":2.87},{"n":"دونات شکلات دابل","i":[["شکلات شکلاتی",60.0]],"b":true,"m":2.87},{"n":"دونات موزی","i":[["شکلات موزی",35.0]],"b":true,"m":2.87},{"n":"دونات موزی دابل","i":[["شکلات موزی",60.0]],"b":true,"m":2.87},{"n":"دونات تلخ","i":[["شکلات تلخ",35.0]],"b":true,"m":2.87},{"n":"دونات تلخ دابل","i":[["شکلات تلخ",60.0]],"b":true,"m":2.87},{"n":"دونات توت","i":[["شکلات توت فرنگی",35.0]],"b":true,"m":2.87},{"n":"دونات توت دابل","i":[["شکلات توت فرنگی",60.0]],"b":true,"m":2.87},{"n":"دونات اسمارت","i":[["اسمارتیز",35],["شکلات شکلاتی",30]],"b":true,"m":2.87},{"n":"دونات اسمارت دابل","i":[["اسمارتیز",40],["شکلات شکلاتی",60]],"b":true,"m":2.87},{"n":"دونات نسکافه","i":[["شکلات نسکافه",35.0]],"b":true,"m":2.87},{"n":"دونات نسکافه دابل","i":[["شکلات نسکافه",60.0]],"b":true,"m":2.87},{"n":"دونات دارچین","i":[["دارچین",2.0]],"b":true,"m":2.87},{"n":"دونات شیر عسل","i":[["شیر عسل",35.0]],"b":true,"m":2.87},{"n":"دونات نارگیل","i":[["پودر نارگیل",5.0],["شیر عسل",25.0]],"b":true,"m":2.87},{"n":"دونات زنجبیل","i":[["زنجبیل",2.0]],"b":true,"m":2.87},{"n":"دونات قند","i":[["قند",2.0]],"b":true,"m":2.87}],"hotDrinks":[{"n":"اسپرسو","i":[["لیوان تک",1],["قهوه",10.0],["شکلات اسپرسو",1]],"b":false,"m":2.87},{"n":"دابل","i":[["لیوان دابل",1],["قهوه",20.0],["شکلات اسپرسو",1]],"b":false,"m":2.87},{"n":"وی 60","i":[["لیوان ۳۶۰",1],["قهوه",20.0],["فیلتر کافی",1]],"b":false,"m":2.87},{"n":"آفوگاتو","i":[["لیوان ۱۸۰",1],["قهوه",10.0],["بستنی",50.0],["قاشق",1]],"b":false,"m":2.87},{"n":"آمریکانو","i":[["لیوان ۳۶۰",1],["قهوه",10.0]],"b":false,"m":2.87},{"n":"لاته","i":[["لیوان ۳۶۰",1],["قهوه",10.0],["شیر",200.0]],"b":false,"m":2.87},{"n":"لاته دابل","i":[["لیوان ۳۶۰",1],["قهوه",20.0],["شیر",200.0]],"b":false,"m":2.87},{"n":"کاپو","i":[["لیوان ۳۶۰",1],["قهوه",10.0],["شیر",150.0]],"b":false,"m":2.87},{"n":"موکا","i":[["لیوان ۳۶۰",1],["قهوه",10.0],["شیر",200.0],["شکلات تلخ",25.0]],"b":false,"m":2.87},{"n":"کارامل کافی","i":[["لیوان ۳۶۰",1],["قهوه",10.0],["شیر",200.0],["کارامل",25.0]],"b":false,"m":2.87},{"n":"نوتلا کافی","i":[["لیوان ۳۶۰",1],["قهوه",10.0],["شیر",200.0],["نوتلا",25.0]],"b":false,"m":2.87},{"n":"شیر شکلات","i":[["لیوان ۳۶۰",1],["شیر",200.0],["پودر هات چاکلت",35.0]],"b":false,"m":2.87},{"n":"شکلات فندقی","i":[["لیوان ۳۶۰",1],["شیر",200.0],["پودر هات چاکلت",35.0],["شکلات فندقی",15.0],["فندق",5.0]],"b":false,"m":2.87},{"n":"هات چاکلت","i":[["لیوان ۳۶۰",1],["پودر هات چاکلت",40.0],["شیر",50.0]],"b":false,"m":2.87},{"n":"هات فندقی","i":[["لیوان ۳۶۰",1],["پودر هات چاکلت",40.0],["شکلات فندقی",15.0],["فندق",5.0],["شیر",50.0]],"b":false,"m":2.87},{"n":"چای","i":[["لیوان ۳۶۰",1],["تی بگ",1.0],["قند بسته ای",1]],"b":false,"m":2.87},{"n":"چای نبات","i":[["لیوان ۳۶۰",1],["تی بگ",1.0],["نبات",1]],"b":false,"m":2.87},{"n":"چای سبز","i":[["لیوان ۳۶۰",1],["گرین بگ",1]],"b":false,"m":2.87},{"n":"شیر عسل","i":[["لیوان ۳۶۰",1],["شیر",200.0],["عسل",30.0]],"b":false,"m":2.87},{"n":"نسکافه","i":[["لیوان ۳۶۰",1],["پودر نسکافه",2.0]],"b":false,"m":2.87},{"n":"نس میکس","i":[["لیوان ۳۶۰",1],["شیر",100.0],["پودر نسکافه",2.0]],"b":false,"m":2.87},{"n":"شیر نس","i":[["لیوان ۳۶۰",1],["شیر",200.0],["پودر نسکافه",2.0]],"b":false,"m":2.87},{"n":"کافی میکس","i":[["لیوان ۳۶۰",1],["قهوه",10.0],["شیر",60.0],["ساشه شکر",2.0]],"b":false,"m":2.87},{"n":"ماکیاتو","i":[["لیوان ۱۸۰",1],["قهوه",10.0],["شیر",100.0]],"b":false,"m":2.87},{"n":"هات کوکو","i":[["لیوان ۳۶۰",1],["قهوه",10.0],["شیر نارگیل",1]],"b":false,"m":2.87},{"n":"ماسالا","i":[["لیوان ۳۶۰",1],["شیر",200.0],["پودر ماسالا",40.0]],"b":false,"m":2.87},{"n":"وایت","i":[["لیوان ۳۶۰",1],["شیر",200.0],["پودر وایت چاکلت",33.0]],"b":false,"m":2.87},{"n":"دارک","i":[["لیوان ۳۶۰",1],["پودر دارک چاکلت",40]],"b":false,"m":2.87},{"n":"پینک","i":[["لیوان ۳۶۰",1],["پودر پینک چاکلت",50]],"b":false,"m":2.87},{"n":"چای کرک","i":[["لیوان ۳۶۰",1],["پودر چای کرک",40.0],["شیر",200.0]],"b":false,"m":2.87}],"coldDrinks":[{"n":"نوتلا","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",250.0],["شیر",50.0],["نوتلا",40.0]],"b":false,"m":2.87},{"n":"فرمند","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",250.0],["شیر",50.0],["فرمند",40.0]],"b":false,"m":2.87},{"n":"شکلات","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",300.0],["پودر کاکائو",25.0]],"b":false,"m":2.87},{"n":"گیت کت","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",250.0],["شیر",50.0],["هیس",1]],"b":false,"m":2.87},{"n":"شیک براونی نوتلا","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",250.0],["نوتلا",15.0],["براونی",1]],"b":false,"m":2.87},{"n":"شیک نسکافه","i":[["بستنی",300.0],["پودر نسکافه",2.0],["لیوان و نی (نوشیدنی سرد)",1]],"b":false,"m":2.87},{"n":"اسپرسو","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",300.0],["قهوه",20.0]],"b":false,"m":2.87},{"n":"توت","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",250.0],["شیر",50.0],["مربا توت",40.0],["سیروپ توت",10.0]],"b":false,"m":2.87},{"n":"چاکلت","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",250.0],["شیر",50.0],["چی پف",0.5]],"b":false,"m":2.87},{"n":"انبه","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",100.0],["شیر",100.0],["انبه",125.0],["شکر",10.0]],"b":false,"m":2.87},{"n":"موز کره","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",150.0],["شیر",80.0],["موز",100.0],["گره بادوم",20.0]],"b":false,"m":2.87},{"n":"اریو","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی",250.0],["شیر",50.0],["ارئو",4.0]],"b":false,"m":2.87},{"n":"لیموناد","i":[["لیوان و نی (نوشیدنی سرد)",1],["یخ",180.0],["آب لیمو",40.0],["سیروپ لیمو",20.0],["آب سودا",150.0]],"b":false,"m":2.87},{"n":"موهیتو","i":[["لیوان و نی (نوشیدنی سرد)",1],["یخ",180.0],["آب لیمو",40.0],["سیروپ لیمو",20.0],["آب سودا",150.0],["سیروپ نعنا",10.0]],"b":false,"m":2.87},{"n":"هندونه","i":[["لیوان و نی (نوشیدنی سرد)",1],["هندوانه",200.0],["شکر",25.0]],"b":false,"m":2.87},{"n":"طالبی","i":[["لیوان و نی (نوشیدنی سرد)",1],["طالبی",200.0],["شکر",35.0]],"b":false,"m":2.87},{"n":"شاتوت","i":[["لیوان و نی (نوشیدنی سرد)",1],["بستنی شاه توت",100.0],["شیر",100.0],["شاه توت",150.0]],"b":false,"m":2.87},{"n":"کافی","i":[["لیوان و نی (نوشیدنی سرد)",1],["یخ",200.0],["قهوه",20.0]],"b":false,"m":2.87},{"n":"لاته","i":[["لیوان و نی (نوشیدنی سرد)",1],["یخ",180.0],["قهوه",20.0],["شیر",80.0]],"b":false,"m":2.87},{"n":"موکا","i":[["لیوان و نی (نوشیدنی سرد)",1],["یخ",150.0],["قهوه",20.0],["بستنی",140.0],["شکلات تلخ",25.0]],"b":false,"m":2.87},{"n":"کارامل","i":[["لیوان و نی (نوشیدنی سرد)",1],["یخ",150.0],["قهوه",20.0],["بستنی",140.0],["کارامل",25.0]],"b":false,"m":2.87},{"n":"اسموتی توت فرنگی","i":[["توت فرنگی",200.0],["شکر",30.0],["لیوان و نی (نوشیدنی سرد)",1]],"b":false,"m":2.87},{"n":"موکا کلاسیک","i":[["لیوان و نی (نوشیدنی سرد)",1],["یخ",150.0],["قهوه",20.0],["شکلات تلخ",25.0]],"b":false,"m":2.87},{"n":"گارامل کلاسیک","i":[["لیوان و نی (نوشیدنی سرد)",1],["یخ",150.0],["قهوه",20.0],["کارامل",25.0]],"b":false,"m":2.87}]};
+function applyPreload(){
+  const ids={}; const st={materials:emptyMaterials(),labor:[],base:{items:[],yield:1},donuts:[],hotDrinks:[],coldDrinks:[]};
+  TD_PRELOAD.materials.forEach(([name,price,qty,unit,cat])=>{ const id=uid(); ids[name]=id; st.materials[cat==='qanadi'?catOf(name):cat].push({id,name,price,qty,unit,updated:Date.now()}); });
+  const conv=l=>l.map(([n,a])=>({refType:'material',refId:ids[n],amount:a}));
+  st.base={items:conv(TD_PRELOAD.base.items),yield:TD_PRELOAD.base.yield};
+  ['donuts','hotDrinks','coldDrinks'].forEach(k=>{ st[k]=TD_PRELOAD[k].map(r=>({id:uid(),name:r.n,items:conv(r.i),useBase:k==='donuts'&&r.b,margin:r.m})); });
+  state=st; saveState(); render();
+}
+function stateIsBlank(){
+  const mats=allMaterials();
+  return state.labor.length===0 && state.base.items.length===0 && !state.donuts.length && !state.hotDrinks.length && !state.coldDrinks.length && mats.every(m=>!(m.price>0));
+}
+function importTD(){
+  if(!confirm('همه اطلاعات فعلی برنامه پاک می‌شه و لیست مواد و فرمول‌های اکسل جایگزینش می‌شه. مطمئنی؟')) return;
+  applyPreload(); alert('بارگذاری شد ✅');
+}
+
+/* ============ STORAGE ============ */
+const SEED_MATERIALS = {
+  qanadi: ["شیر,0,0,عدد","خامه,0,0,بسته","آب پنیر,0,0,کیلو","گلوتن,0,0,کیلو","آرد,0,0,بسته","شکر,0,0,گرم","قند,0,0,کیلو","پودر قند,0,0,کیلو","بکینگ پودر,0,0,بسته","وانیل,0,0,بسته","بهبود,0,0,بسته","روغن سرخ کردنی,0,0,کیلو","پودر نارگیل,0,0,گرم","پودر کاکائو,0,0,گرم","یخ,0,0,بسته","هندوانه,0,0,کیلو","طالبی,0,0,کیلو","توت فرنگی,0,0,کیلو","موز,0,0,کیلو","انبه,0,0,کیلو","شکلات سفید,0,0,کیلو","شکلات شکلاتی,0,0,کیلو","شکلات موزی,0,0,کیلو","شکلات توت فرنگی,0,0,کیلو","شکلات پسته,0,0,کیلو","شکلات تلخ,0,0,کیلو","شکلات نسکافه,0,0,کیلو","شکلات فندقی,0,0,کیلو","اسمارتیز,0,0,کیلو","ترافل,0,0,کیلو","کارامل,0,0,کیلو","شیر عسل,0,0,کیلو","نوتلا,0,0,بسته","ارئو,0,0,بسته","کیت کت,0,0,عدد","اسنیکرز,0,0,عدد","سیروپ لیمو,0,0,بطری","پودر پینک چاکلت,0,0,کیلو","پودر هات چاکلت,0,0,بسته","پودر وایت چاکلت,0,0,بسته","قهوه عربیکا,0,0,کیلو","قهوه ۷۰/۳۰,0,0,کیلو","پودر چای کرک,0,0,کیلو","پودر ماسالا,0,0,کیلو","نسکافه,0,0,بسته","چای,0,0,بسته","نبات,0,0,کیلو","آب معدنی,0,0,بسته"],
+  plastic: ["لیوان دابل,0,0,عدد","لیوان تک,0,0,عدد","لیوان ۱۸۰,0,0,عدد","لیوان ۳۶۰,0,0,عدد","درب لیوان ۳۶۰,0,0,عدد","لیوان شیک,0,0,گرم","آستری,0,0,رول","نی مغازه,0,0,گرم","نی اسنپ,0,0,گرم","پاکت اسنپ,0,0,کیلو","پک اسنپ,0,0,گرم","لیبل,0,0,گرم","ظرف تکی,0,0,کیلو","ظرف دوتایی,0,0,کیلو","هولدر دوتایی,0,0,کیلو","هولدر چهارتایی,0,0,گرم","کاغذ روغنی,0,0,کیلو","سلفون,0,0,رول","کیسه ۳ کیلویی شیری,0,0,کیلو","کیسه فریزر,0,0,بسته","رول دستگاه پوز,0,0,عدد"],
+  other: ["دستمال کاغذی,0,0,بسته","دستکش,0,0,کیلو","کیسه زباله بزرگ,0,0,کیلو","کیسه زباله متوسط,0,0,کیلو","کیسه زباله کوچک,0,0,بسته","کیسه زباله سرویس بهداشتی,0,0,بسته","پاک کننده چند منظوره,0,0,عدد","شیشه پاک کن,0,0,عدد","قاشق,0,0,بسته","چاقو,0,0,بسته","شوکول,0,0,بسته"]
+};
+function seedMaterialsIfEmpty(){
+  const totalExisting = allMaterials().length;
+  if(totalExisting > 0) return false;
+  Object.keys(SEED_MATERIALS).forEach(cat=>{
+    SEED_MATERIALS[cat].forEach(line=>{
+      const parts = line.split(',').map(p=>p.trim());
+      state.materials[cat==='qanadi'?catOf(parts[0]):cat].push({id:uid(), name:parts[0], price:num(parts[1]), qty:num(parts[2]), unit:parts[3]||''});
+    });
+  });
+  return true;
+}
+async function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      state = Object.assign(state, parsed);
+    }
+  }catch(e){ console.error('load failed', e); }
+  migrateMaterials();
+  if(stateIsBlank()){ applyPreload(); return; }
+  try{ const seeded = seedMaterialsIfEmpty(); if(seeded) saveState(); }catch(e){ console.error(e); }
+  render();
+}
+let saveTimer=null;
+function saveState(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>attemptSave(), 200);
+}
+function attemptSave(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    flashSaved();
+    hideSaveError();
+  }catch(e){
+    console.error('save failed', e);
+    showSaveError();
+  }
+}
+function flashSaved(){
+  const b = document.getElementById('savedBadge');
+  b.classList.remove('error');
+  b.textContent = 'ذخیره شد';
+  b.classList.add('show');
+  clearTimeout(flashSaved._t);
+  flashSaved._t = setTimeout(()=>b.classList.remove('show'), 900);
+}
+function showSaveError(){
+  const b = document.getElementById('savedBadge');
+  b.classList.add('show','error');
+  b.textContent = '⚠️ حافظه مرورگر پر یا غیرفعاله — از پشتیبان دستی استفاده کن';
+  clearTimeout(flashSaved._t);
+}
+function hideSaveError(){
+  const b = document.getElementById('savedBadge');
+  b.classList.remove('error');
+}
+
+/* ============ HELPERS ============ */
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function num(v){ const n=parseFloat(v); return isNaN(n)?0:n; }
+function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
+const CATS=[
+  {id:'baking',label:'مواد دونات و قنادی'},
+  {id:'chocolate',label:'شکلات و تاپینگ'},
+  {id:'dairy',label:'لبنیات و بستنی'},
+  {id:'fruit',label:'میوه و سیروپ'},
+  {id:'coffee',label:'قهوه، چای و پودرها'},
+  {id:'plastic',label:'لوازم پلاستیکی'},
+  {id:'other',label:'سایر'},
+];
+function catLabel(cat){ const c=CATS.find(x=>x.id===cat); return c?c.label:'سایر'; }
+function emptyMaterials(){ const o={}; CATS.forEach(c=>o[c.id]=[]); return o; }
+function catOf(n){
+  if(n==='آب پنیر') return 'baking';
+  if(/^(شیر|خامه|بستنی)/.test(n) && n!=='شیر عسل') return 'dairy';
+  if(/^شکلات اسپرسو/.test(n)) return 'coffee';
+  if(/^(شکلات|نوتلا|اسمارتیز|ارئو|کیت کت|اسنیکرز|براونی|چی پف|هیس|فرمند|گره بادوم|فندق|ترافل|کارامل|پودر کاکائو)/.test(n)) return 'chocolate';
+  if(/^(قهوه|نسکافه|پودر نسکافه|چای|تی بگ|گرین بگ|نبات|عسل|پودر (هات|وایت|دارک|پینک|ماسالا|چای))|ساشه شکر|قند بسته/.test(n)) return 'coffee';
+  if(/^(هندوانه|طالبی|توت|موز|انبه|شاه توت|مربا|سیروپ|آب |یخ)/.test(n)) return 'fruit';
+  return 'baking';
+}
+function migrateMaterials(){
+  const old=state.materials||{}; const nm=emptyMaterials();
+  Object.keys(old).forEach(k=>{
+    (old[k]||[]).forEach(m=>{ const t=(k==='qanadi')?catOf(m.name):(nm[k]?k:'other'); if(!m.updated) m.updated=Date.now(); nm[t].push(m); });
+  });
+  state.materials=nm;
+}
+
+function allMaterials(){
+  return CATS.flatMap(c=>(state.materials[c.id]||[]).map(m=>({...m,cat:c.id})));
+}
+function findMaterial(id){ return allMaterials().find(m=>m.id===id); }
+function findLabor(id){ return state.labor.find(l=>l.id===id); }
+function materialUnitPrice(m){ return m.qty>0 ? m.price/m.qty : 0; }
+function laborHourly(l){ return l.hours>0 ? l.salary/l.hours : 0; }
+
+function itemCost(it){
+  if(it.refType==='material'){
+    const m = findMaterial(it.refId);
+    return m ? materialUnitPrice(m)*it.amount : 0;
+  }else{
+    const l = findLabor(it.refId);
+    return l ? laborHourly(l)*it.amount : 0;
+  }
+}
+function itemsCost(items){ return items.reduce((s,it)=>s+itemCost(it),0); }
+function itemLabel(it){
+  if(it.refType==='material'){
+    const m = findMaterial(it.refId);
+    return m ? `${m.name} (${it.amount} ${m.unit||''})` : 'حذف‌شده';
+  }else{
+    const l = findLabor(it.refId);
+    return l ? `${l.name} (${it.amount} ساعت)` : 'حذف‌شده';
+  }
+}
+function baseCostTotal(){ return itemsCost(state.base.items); }
+function baseCostPerUnit(){ const y=state.base.yield||1; return y>0 ? baseCostTotal()/y : 0; }
+function recipeCost(recipe, useBase){
+  let c = itemsCost(recipe.items);
+  if(useBase) c += baseCostPerUnit();
+  return c;
+}
+function finalPrice(cost, margin){ return cost*(margin>0?margin:1); }
+function sellPrice(r, cost){ return r.manualPrice>0 ? r.manualPrice : finalPrice(cost, r.margin); }
+function profitPct(cost, price){ return price>0 ? (price-cost)/price*100 : null; }
+const LOW_PROFIT=60;
+const DAY_MS=86400000, STALE_DAYS=30;
+const MENU_GROUPS=[
+  {key:'donuts', title:'دونات‌ها', useBase:true, color:'var(--pink)'},
+  {key:'hotDrinks', title:'نوشیدنی‌های گرم', useBase:false, color:'var(--orange)'},
+  {key:'coldDrinks', title:'نوشیدنی‌های سرد', useBase:false, color:'var(--blue)'},
+];
+function menuEntries(){
+  return MENU_GROUPS.flatMap(g=>state[g.key].map(r=>{
+    const cost=recipeCost(r,g.useBase&&r.useBase), price=sellPrice(r,cost), pct=profitPct(cost,price);
+    return {g,r,cost,price,pct,auto:finalPrice(cost,r.margin)};
+  }));
+}
+function lowEntries(){ return menuEntries().filter(e=>e.pct!==null&&e.pct<LOW_PROFIT).sort((a,b)=>a.pct-b.pct); }
+function daysSince(m){ return Math.floor((Date.now()-(m.updated||Date.now()))/DAY_MS); }
+function isStale(m){ return daysSince(m)>STALE_DAYS; }
+function staleList(){ return allMaterials().filter(isStale).sort((a,b)=>a.updated-b.updated); }
+function tabLabel(t){
+  if(t.id==='stale') return t.label+' ('+staleList().length+')';
+  if(t.id==='low') return t.label+' ('+lowEntries().length+')';
+  return t.label;
+}
+
+/* ============ RENDER SHELL ============ */
+function render(){
+  renderTabs();
+  renderMain();
+}
+function renderTabs(){
+  const nav = document.getElementById('tabs');
+  nav.innerHTML = TABS.map(t=>`
+    <button class="tab-btn ${activeTab===t.id?'active':''}" data-tab="${t.id}"
+      style="--tab-color:${t.color}; --tab-color-d:${t.colorD};">
+      <span class="ring">${t.icon}</span>
+      <span>${tabLabel(t)}</span>
+    </button>
+  `).join('');
+  nav.querySelectorAll('[data-tab]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ activeTab = btn.dataset.tab; render(); });
+  });
+}
+function renderMain(){
+  const main = document.getElementById('main');
+  if(activeTab==='materials') main.innerHTML = viewMaterials();
+  else if(activeTab==='labor') main.innerHTML = viewLabor();
+  else if(activeTab==='base') main.innerHTML = viewBase();
+  else if(activeTab==='donuts') main.innerHTML = viewRecipes('donuts','دونات', true);
+  else if(activeTab==='hot') main.innerHTML = viewRecipes('hotDrinks','نوشیدنی گرم', false);
+  else if(activeTab==='cold') main.innerHTML = viewRecipes('coldDrinks','نوشیدنی سرد', false);
+  else if(activeTab==='menu') main.innerHTML = viewMenu();
+  else if(activeTab==='stale') main.innerHTML = viewStale();
+  else if(activeTab==='low') main.innerHTML = viewLow();
+  attachHandlers();
+}
+
+/* ============ MATERIALS TAB ============ */
+let matCat='baking', matQuery='';
+function matChipsHTML(){
+  const q=matQuery.trim();
+  return CATS.map(c=>`<button class="picker-tab ${(!q&&matCat===c.id)?'active':''}" onclick="setMatCat('${c.id}')">${c.label} (${(state.materials[c.id]||[]).length})</button>`).join('');
+}
+function matRowHTML(m){
+  const st=isStale(m), d=daysSince(m);
+  return `
+    <div class="item-row ${st?'stale':''}" style="align-items:flex-start;">
+      <div style="flex:1;">
+        <div class="name">${m.name}${m.price<=0||m.qty<=0?' <span style="color:var(--danger);font-size:10.5px;font-weight:600;">(قیمت را کامل کن)</span>':''}${st?` <span class="stale-badge">⏰ ${d} روز بدون آپدیت</span>`:''}</div>
+        <div class="row" style="margin-top:6px;">
+          <input type="number" value="${m.price||''}" placeholder="قیمت" data-action="edit-material" data-field="price" data-cat="${m.cat}" data-id="${m.id}" style="font-size:12px;padding:6px 8px;">
+          <input type="number" value="${m.qty||''}" placeholder="مقدار" data-action="edit-material" data-field="qty" data-cat="${m.cat}" data-id="${m.id}" style="font-size:12px;padding:6px 8px;">
+          <input type="text" value="${m.unit||''}" placeholder="واحد" data-action="edit-material" data-field="unit" data-cat="${m.cat}" data-id="${m.id}" style="font-size:12px;padding:6px 8px;">
+        </div>
+        <div class="row" style="margin-top:6px;align-items:center;">
+          <select data-action="move-material" data-cat="${m.cat}" data-id="${m.id}" style="font-size:11.5px;padding:5px 8px;">${CATS.map(c=>`<option value="${c.id}" ${c.id===m.cat?'selected':''}>${c.label}</option>`).join('')}</select>
+          <div class="meta" style="white-space:nowrap;">قیمت واحد: ${fmt(materialUnitPrice(m))} ت</div>
+        </div>
+        <div class="row" style="margin-top:6px;align-items:center;justify-content:space-between;">
+          <div class="meta">آخرین آپدیت قیمت: ${d===0?'امروز':d+' روز پیش'}</div>
+          ${st?`<button class="btn mint" style="padding:5px 10px;font-size:11.5px;" data-action="confirm-price" data-cat="${m.cat}" data-id="${m.id}">✓ قیمت درسته</button>`:''}
+        </div>
+      </div>
+      <button class="btn-icon" data-action="del-material" data-cat="${m.cat}" data-id="${m.id}">✕</button>
+    </div>`;
+}
+function matListHTML(){
+  const q=matQuery.trim();
+  const list=(q ? allMaterials().filter(m=>m.name.includes(q)) : allMaterials().filter(m=>m.cat===matCat)).sort((a,b)=>a.name.localeCompare(b.name,'fa'));
+  if(!list.length) return `<div class="card"><div class="empty">${q?'چیزی پیدا نشد':'ماده‌ای در این دسته نیست'}</div></div>`;
+  return `<div class="card">`+list.map(matRowHTML).join('')+`</div>`;
+}
+function viewStale(){
+  const list=staleList();
+  return `
+    <div class="section-title"><span class="dot" style="background:var(--danger)"></span>قیمت‌هایی که بیش از ${STALE_DAYS} روزه آپدیت نشدن</div>
+    <div class="hint">قیمت رو اصلاح کن یا اگه تغییری نکرده «قیمت درسته» رو بزن تا از این لیست خارج بشه.</div>
+    ${list.length?`<div class="card">${list.map(matRowHTML).join('')}</div>`:`<div class="card"><div class="empty">همه قیمت‌ها به‌روزن ✅</div></div>`}`;
+}
+function setMatCat(id){ matCat=id; matQuery=''; render(); }
+function refreshMatList(){
+  document.getElementById('matChips').innerHTML=matChipsHTML();
+  const el=document.getElementById('matList'); el.innerHTML=matListHTML(); attachHandlers(el);
+}
+function viewMaterials(){
+  return `
+    <div style="display:flex;gap:8px;margin:10px 0;">
+      <input type="text" id="matSearch" placeholder="🔍 جستجو در همه مواد..." value="${matQuery}" oninput="matQuery=this.value; refreshMatList()" style="flex:1;">
+      <button class="btn" onclick="openNewMaterialModal()">+ ماده جدید</button>
+    </div>
+    <div class="picker-tabs" id="matChips">${matChipsHTML()}</div>
+    <div id="matList">${matListHTML()}</div>`;
+}
+function openNewMaterialModal(){ modalState={mode:'newMaterial',step:'material',cat:matCat}; renderModal(); }
+function modalSaveMaterial(){
+  const name=document.getElementById('nmName').value.trim(); if(!name) return;
+  const cat=document.getElementById('nmCat').value;
+  state.materials[cat].push({id:uid(),updated:Date.now(),name,price:num(document.getElementById('nmPrice').value),qty:num(document.getElementById('nmQty').value),unit:document.getElementById('nmUnit').value.trim()});
+  matCat=cat; matQuery=''; saveState(); closeModal(); render();
+}
+
+/* ============ LABOR TAB ============ */
+function viewLabor(){
+  return `
+    <div class="section-title"><span class="dot" style="background:var(--mint)"></span>نیروی کار</div>
+    <div class="card">
+      <div class="row">
+        <div class="field"><label>نام پرسنل</label><input type="text" id="lab-name" placeholder="مثلا علی"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>حقوق (تومان)</label><input type="number" id="lab-salary" placeholder="0"></div>
+        <div class="field"><label>ساعت کاری (در همان دوره)</label><input type="number" id="lab-hours" placeholder="0"></div>
+      </div>
+      <button class="btn block" data-action="add-labor">+ افزودن پرسنل</button>
+    </div>
+    <div class="card">
+      ${state.labor.length===0 ? `<div class="empty">هنوز پرسنلی اضافه نشده</div>` :
+        state.labor.map(l=>`
+          <div class="item-row">
+            <div>
+              <div class="name">${l.name}</div>
+              <div class="meta">حقوق: ${fmt(l.salary)} ت — ${l.hours} ساعت — نرخ ساعتی: ${fmt(laborHourly(l))} ت</div>
+            </div>
+            <button class="btn-icon" data-action="del-labor" data-id="${l.id}">✕</button>
+          </div>
+        `).join('')
+      }
+    </div>
+  `;
+}
+
+/* ============ SHARED: list of items already added to a recipe/base ============ */
+function itemsListHTML(items, scope, extraDataAttrs){
+  if(items.length===0) return `<div class="empty">هنوز آیتمی اضافه نشده</div>`;
+  return items.map((it,idx)=>`
+    <div class="item-row">
+      <div class="name">${itemLabel(it)}</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="price">${fmt(itemCost(it))} ت</div>
+        <button class="btn-icon" data-action="del-item" data-scope="${scope}" data-idx="${idx}" ${extraDataAttrs||''}>✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ============ BASE TAB ============ */
+function viewBase(){
+  const total = baseCostTotal();
+  const perUnit = baseCostPerUnit();
+  return `
+    <div class="section-title"><span class="dot" style="background:var(--pink)"></span>بیس دونات</div>
+    <div class="card">
+      <button class="btn secondary block" data-action="open-add-items" data-key="base">+ افزودن مواد به بیس</button>
+      <div class="section-title" style="margin-top:14px;">اقلام انتخاب‌شده</div>
+      ${itemsListHTML(state.base.items, 'base')}
+      <div class="row" style="margin-top:12px;">
+        <div class="field">
+          <label>این مقدار مواد چند عدد دونات می‌دهد؟</label>
+          <input type="number" id="base-yield" value="${state.base.yield}" placeholder="مثلا 50">
+        </div>
+      </div>
+      <button class="btn secondary block" data-action="save-base-yield">ثبت تعداد</button>
+      <div class="cost-line"><span>هزینه کل بیس</span><span class="val">${fmt(total)} تومان</span></div>
+      <div class="cost-line total"><span>قیمت تمام‌شده هر عدد بیس دونات</span><span class="val">${fmt(perUnit)} تومان</span></div>
+    </div>
+  `;
+}
+
+/* ============ DONUTS / HOT / COLD TAB (shared) ============ */
+const recipeQuery={};
+function recipeCardsHTML(key, singular, allowBase){
+  const q=(recipeQuery[key]||'').trim();
+  const list=state[key].filter(r=>!q||r.name.includes(q));
+  if(!list.length) return `<div class="card"><div class="empty">${q?'چیزی پیدا نشد':'هنوز '+singular+'ی تعریف نشده'}</div></div>`;
+  return list.map(r=>{
+    const scope = `${key}-${r.id}`;
+    const cost = recipeCost(r, allowBase && r.useBase);
+    const price = sellPrice(r, cost);
+    return `
+    <div class="card">
+      <div class="card-header">
+        <input type="text" class="title-input" value="${r.name}" data-action="rename-recipe" data-key="${key}" data-id="${r.id}">
+        <button class="btn-icon" data-action="del-recipe" data-key="${key}" data-id="${r.id}">✕ حذف</button>
+      </div>
+      ${allowBase ? `
+      <div class="checkbox-row">
+        <input type="checkbox" id="usebase-${r.id}" data-action="toggle-usebase" data-key="${key}" data-id="${r.id}" ${r.useBase?'checked':''}>
+        <label for="usebase-${r.id}">احتساب قیمت یک عدد بیس دونات (${fmt(baseCostPerUnit())} ت) در هزینه</label>
+      </div>` : ''}
+      <div class="section-title" style="margin-top:12px;">اقلام انتخاب‌شده</div>
+      ${itemsListHTML(r.items, scope, `data-recipe-key="${key}" data-recipe-id="${r.id}"`)}
+      <button class="btn secondary block" data-action="open-add-items" data-key="${key}" data-id="${r.id}">+ افزودن مواد</button>
+      <div class="row" style="margin-top:12px;">
+        <div class="field">
+          <label>ضریب سود (مثلا 2 یعنی دو برابر قیمت تمام‌شده)</label>
+          <input type="number" step="0.01" value="${r.margin}" data-action="set-margin" data-key="${key}" data-id="${r.id}">
+        </div>
+      </div>
+      <div class="cost-line"><span>قیمت تمام‌شده</span><span class="val">${fmt(cost)} تومان</span></div>
+      <div class="cost-line total"><span>قیمت فروش نهایی</span><span class="val">${fmt(price)} تومان</span></div>
+    </div>`;
+  }).join('');
+}
+function refreshRecipes(key, singular, allowBase){
+  const el=document.getElementById('recipeList-'+key); el.innerHTML=recipeCardsHTML(key,singular,allowBase); attachHandlers(el);
+}
+function viewRecipes(key, singular, allowBase){
+  return `
+    <div style="display:flex;gap:8px;margin:10px 0;">
+      <input type="text" placeholder="🔍 جستجو..." value="${recipeQuery[key]||''}" oninput="recipeQuery['${key}']=this.value; refreshRecipes('${key}','${singular}',${allowBase})" style="flex:1;">
+      <button class="btn" data-action="open-new-recipe" data-key="${key}" data-label="${singular}">+ ${singular} جدید</button>
+    </div>
+    <div id="recipeList-${key}">${recipeCardsHTML(key,singular,allowBase)}</div>`;
+}
+
+/* ============ FINAL MENU TAB ============ */
+function menuItemHTML(e, showGroup){
+  const {g,r,cost,price,pct,auto}=e; const low=pct!==null&&pct<LOW_PROFIT;
+  return `
+    <div class="menu-item ${low?'low':''}" style="flex-direction:column;align-items:stretch;gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="name">${r.name}${showGroup?` <span class="meta">(${g.title})</span>`:''}</div>
+          <div class="sub">تمام‌شده: ${fmt(cost)} ت — سود: <b>${pct===null?'-':pct.toFixed(1)+'٪'}</b>${low?' ⚠️':''}${r.manualPrice>0?' — قیمت دستی':''}</div>
+        </div>
+        <div class="price">${fmt(price)} ت</div>
+      </div>
+      <div class="row" style="align-items:center;">
+        <label style="font-size:11px;color:var(--muted);white-space:nowrap;">قیمت دستی:</label>
+        <input type="number" value="${r.manualPrice||''}" placeholder="خودکار: ${fmt(auto)}" data-action="set-manual-price" data-key="${g.key}" data-id="${r.id}" style="padding:6px 8px;font-size:12.5px;">
+      </div>
+    </div>`;
+}
+function viewMenu(){
+  const all=menuEntries();
+  return `<div class="hint">درصد سود = (قیمت فروش − قیمت تمام‌شده) ÷ قیمت فروش. زیر ${LOW_PROFIT}٪ قرمز می‌شه. برای قیمت دستی عدد بنویس، برای برگشت به قیمت خودکار خالیش کن.</div>`+
+  MENU_GROUPS.map(g=>{
+    const list=all.filter(e=>e.g.key===g.key);
+    return `
+      <div class="menu-group">
+        <h3><span class="dot" style="width:8px;height:8px;border-radius:50%;background:${g.color};display:inline-block;"></span>${g.title}</h3>
+        ${list.length===0 ? `<div class="card"><div class="empty">موردی تعریف نشده</div></div>` : list.map(e=>menuItemHTML(e,false)).join('')}
+      </div>`;
+  }).join('');
+}
+function viewLow(){
+  const list=lowEntries();
+  return `
+    <div class="section-title"><span class="dot" style="background:var(--danger)"></span>محصولات با سود زیر ${LOW_PROFIT}٪</div>
+    <div class="hint">قیمت دستی بذار یا ضریب سود رو از تب خود محصول بالا ببر.</div>
+    ${list.length?list.map(e=>menuItemHTML(e,true)).join(''):`<div class="card"><div class="empty">همه محصولات بالای ${LOW_PROFIT}٪ سود دارن ✅</div></div>`}`;
+}
+
+/* ============ EVENT HANDLERS ============ */
+function attachHandlers(root){
+  const main = root || document.getElementById('main');
+  main.querySelectorAll('[data-action]').forEach(elm=>{
+    const action = elm.dataset.action;
+
+    if(action==='add-material'){
+      elm.addEventListener('click', ()=>{
+        const cat = elm.dataset.cat;
+        const name = document.getElementById(`mat-name-${cat}`).value.trim();
+        const price = num(document.getElementById(`mat-price-${cat}`).value);
+        const qty = num(document.getElementById(`mat-qty-${cat}`).value);
+        const unit = document.getElementById(`mat-unit-${cat}`).value.trim();
+        if(!name || price<=0 || qty<=0) return;
+        state.materials[cat].push({id:uid(), name, price, qty, unit});
+        saveState(); render();
+      });
+    }
+    if(action==='bulk-add-material'){
+      elm.addEventListener('click', ()=>{
+        const cat = elm.dataset.cat;
+        const ta = document.getElementById(`mat-bulk-${cat}`);
+        const lines = ta.value.split('\n').map(l=>l.trim()).filter(Boolean);
+        let added = 0;
+        lines.forEach(line=>{
+          const parts = line.split(',').map(p=>p.trim());
+          const name = parts[0];
+          if(!name) return;
+          const price = parts[1]!==undefined ? num(parts[1]) : 0;
+          const qty = parts[2]!==undefined ? num(parts[2]) : 0;
+          const unit = parts[3] || '';
+          state.materials[cat].push({id:uid(), name, price, qty, unit});
+          added++;
+        });
+        if(added>0){ ta.value=''; saveState(); render(); }
+      });
+    }
+    if(action==='edit-material'){
+      elm.addEventListener('change', ()=>{
+        const cat = elm.dataset.cat, id = elm.dataset.id, field = elm.dataset.field;
+        const m = state.materials[cat].find(x=>x.id===id);
+        if(!m) return;
+        if(field==='unit') m.unit = elm.value.trim();
+        else { m[field] = num(elm.value); m.updated = Date.now(); }
+        saveState(); render();
+      });
+    }
+    if(action==='confirm-price'){
+      elm.addEventListener('click', ()=>{
+        const m=state.materials[elm.dataset.cat].find(x=>x.id===elm.dataset.id);
+        if(m){ m.updated=Date.now(); saveState(); render(); }
+      });
+    }
+    if(action==='set-manual-price'){
+      elm.addEventListener('change', ()=>{
+        const r=state[elm.dataset.key].find(x=>x.id===elm.dataset.id);
+        if(r){ const v=num(elm.value); r.manualPrice = v>0 ? v : null; saveState(); render(); }
+      });
+    }
+    if(action==='move-material'){
+      elm.addEventListener('change', ()=>{
+        const from=elm.dataset.cat, id=elm.dataset.id, to=elm.value;
+        const i=state.materials[from].findIndex(x=>x.id===id); if(i<0||from===to) return;
+        const [m]=state.materials[from].splice(i,1); state.materials[to].push(m);
+        saveState(); render();
+      });
+    }
+    if(action==='del-material'){
+      elm.addEventListener('click', ()=>{
+        const cat = elm.dataset.cat, id = elm.dataset.id;
+        state.materials[cat] = state.materials[cat].filter(m=>m.id!==id);
+        saveState(); render();
+      });
+    }
+    if(action==='add-labor'){
+      elm.addEventListener('click', ()=>{
+        const name = document.getElementById('lab-name').value.trim();
+        const salary = num(document.getElementById('lab-salary').value);
+        const hours = num(document.getElementById('lab-hours').value);
+        if(!name || salary<=0 || hours<=0) return;
+        state.labor.push({id:uid(), name, salary, hours});
+        saveState(); render();
+      });
+    }
+    if(action==='del-labor'){
+      elm.addEventListener('click', ()=>{
+        state.labor = state.labor.filter(l=>l.id!==elm.dataset.id);
+        saveState(); render();
+      });
+    }
+    if(action==='open-add-items'){
+      elm.addEventListener('click', ()=>{
+        openAddItemsModal(elm.dataset.key, elm.dataset.id || null);
+      });
+    }
+    if(action==='del-item'){
+      elm.addEventListener('click', ()=>{
+        const scope = elm.dataset.scope;
+        const idx = parseInt(elm.dataset.idx,10);
+        removeItemFromScope(scope, idx, elm.dataset.recipeKey, elm.dataset.recipeId);
+        saveState(); render();
+      });
+    }
+    if(action==='save-base-yield'){
+      elm.addEventListener('click', ()=>{
+        state.base.yield = num(document.getElementById('base-yield').value) || 1;
+        saveState(); render();
+      });
+    }
+    if(action==='open-new-recipe'){
+      elm.addEventListener('click', ()=>{
+        openNewRecipeModal(elm.dataset.key, elm.dataset.label);
+      });
+    }
+    if(action==='del-recipe'){
+      elm.addEventListener('click', ()=>{
+        const key = elm.dataset.key, id = elm.dataset.id;
+        state[key] = state[key].filter(r=>r.id!==id);
+        saveState(); render();
+      });
+    }
+    if(action==='rename-recipe'){
+      elm.addEventListener('change', ()=>{
+        const key = elm.dataset.key, id = elm.dataset.id;
+        const r = state[key].find(x=>x.id===id);
+        if(r){ r.name = elm.value.trim() || r.name; saveState(); }
+      });
+    }
+    if(action==='toggle-usebase'){
+      elm.addEventListener('change', ()=>{
+        const key = elm.dataset.key, id = elm.dataset.id;
+        const r = state[key].find(x=>x.id===id);
+        if(r){ r.useBase = elm.checked; saveState(); render(); }
+      });
+    }
+    if(action==='set-margin'){
+      elm.addEventListener('change', ()=>{
+        const key = elm.dataset.key, id = elm.dataset.id;
+        const r = state[key].find(x=>x.id===id);
+        if(r){ r.margin = num(elm.value) || 1; saveState(); render(); }
+      });
+    }
+  });
+}
+
+function pushItemToScope(scope, entry){
+  if(scope==='base'){
+    state.base.items.push(entry);
+    return;
+  }
+  const [key, id] = splitScope(scope);
+  const r = state[key].find(x=>x.id===id);
+  if(r) r.items.push(entry);
+}
+function removeItemFromScope(scope, idx){
+  if(scope==='base'){
+    state.base.items.splice(idx,1);
+    return;
+  }
+  const [key, id] = splitScope(scope);
+  const r = state[key].find(x=>x.id===id);
+  if(r) r.items.splice(idx,1);
+}
+function splitScope(scope){
+  // scope format: "<key>-<id>", key is one of donuts/hotDrinks/coldDrinks, id is alnum from uid()
+  const keys = ['donuts','hotDrinks','coldDrinks'];
+  for(const k of keys){
+    if(scope.startsWith(k+'-')) return [k, scope.slice(k.length+1)];
+  }
+  return [null,null];
+}
+
+/* ============ ITEM PICKER MODAL ============ */
+let modalState = null;
+
+function openNewRecipeModal(key, label){
+  modalState = {mode:'newRecipe', key, recipeId:null, label, step:'name', name:'', margin:2.87, useBase:key==='donuts', q:'', selected:[], amountIdx:0, amounts:[], pickerTab:'baking'};
+  renderModal();
+}
+function openAddItemsModal(key, recipeId){
+  modalState = {mode:'addItems', key, recipeId: recipeId||null, step:'select', selected:[], amountIdx:0, amounts:[], pickerTab:'baking'};
+  renderModal();
+}
+function closeModal(){
+  modalState = null;
+  const ov = document.getElementById('modalOverlay');
+  if(ov) ov.style.display='none';
+}
+function isSelected(refType, refId){
+  return modalState.selected.some(s=>s.refType===refType && s.refId===refId);
+}
+function toggleSelect(refType, refId){
+  const idx = modalState.selected.findIndex(s=>s.refType===refType && s.refId===refId);
+  if(idx>=0) modalState.selected.splice(idx,1);
+  else modalState.selected.push({refType, refId});
+  refreshPickerCount();
+}
+function modalItemLabel(sel){
+  if(sel.refType==='material'){ const m=findMaterial(sel.refId); return m ? `${m.name}${m.unit?' ('+m.unit+')':''}` : ''; }
+  const l = findLabor(sel.refId); return l ? `${l.name} (پرسنل)` : '';
+}
+function setPickerTab(tab){ modalState.pickerTab = tab; modalState.q=''; renderModal(); }
+function refreshPicker(){
+  const q=(modalState.q||'').trim();
+  const tabs=[...CATS.map(c=>({id:c.id,label:c.label})),{id:'labor',label:'پرسنل'}];
+  document.getElementById('pickerTabs').innerHTML=tabs.map(t=>`<button class="picker-tab ${(!q&&modalState.pickerTab===t.id)?'active':''}" onclick="setPickerTab('${t.id}')">${t.label}</button>`).join('');
+  let labs=[],mats=[];
+  if(q){ labs=state.labor.filter(l=>l.name.includes(q)); mats=allMaterials().filter(m=>m.name.includes(q)); }
+  else if(modalState.pickerTab==='labor') labs=state.labor; else mats=(state.materials[modalState.pickerTab]||[]).slice();
+  mats.sort((a,b)=>a.name.localeCompare(b.name,'fa'));
+  const rows=[
+    ...labs.map(l=>`<label class="picker-row"><input type="checkbox" ${isSelected('labor',l.id)?'checked':''} onchange="toggleSelect('labor','${l.id}')"><div><div>${l.name}</div><div class="sub">نرخ ساعتی: ${fmt(laborHourly(l))} تومان</div></div></label>`),
+    ...mats.map(m=>`<label class="picker-row"><input type="checkbox" ${isSelected('material',m.id)?'checked':''} onchange="toggleSelect('material','${m.id}')"><div><div>${m.name}</div><div class="sub">واحد: ${m.unit||'-'} — قیمت واحد: ${fmt(materialUnitPrice(m))} تومان</div></div></label>`)
+  ];
+  document.getElementById('pickerList').innerHTML = rows.length ? rows.join('') : `<div class="empty">${q?'چیزی پیدا نشد':'موردی ثبت نشده'}</div>`;
+  refreshPickerCount();
+}
+function refreshPickerCount(){
+  document.getElementById('pickerCount').textContent=modalState.selected.length+' مورد انتخاب شده';
+  const b=document.getElementById('pickerNext'); b.disabled=modalState.selected.length===0; b.style.opacity=b.disabled?.5:1;
+}
+
+function renderModal(){
+  const overlay = document.getElementById('modalOverlay');
+  const sheet = document.getElementById('modalSheet');
+  if(!modalState){ overlay.style.display='none'; return; }
+  overlay.style.display='flex';
+
+  if(modalState.step==='material'){
+    sheet.innerHTML = `
+      <div class="modal-header"><h3>ماده اولیه جدید</h3><button class="btn-icon" onclick="closeModal()">✕</button></div>
+      <div class="field"><label>نام ماده</label><input type="text" id="nmName" placeholder="مثلا آرد"></div>
+      <div class="field"><label>دسته</label><select id="nmCat">${CATS.map(c=>`<option value="${c.id}" ${c.id===modalState.cat?'selected':''}>${c.label}</option>`).join('')}</select></div>
+      <div class="row">
+        <div class="field"><label>قیمت خرید (تومان)</label><input type="number" id="nmPrice" placeholder="0"></div>
+        <div class="field"><label>مقدار خریداری‌شده</label><input type="number" id="nmQty" placeholder="0"></div>
+        <div class="field"><label>واحد</label><input type="text" id="nmUnit" placeholder="گرم / عدد"></div>
+      </div>
+      <div class="hint">مثلا: آرد، ۳۵۰۰۰۰۰ تومان برای ۴۰۰۰۰ گرم</div>
+      <button class="btn block" onclick="modalSaveMaterial()">ثبت ماده</button>
+    `;
+    setTimeout(()=>{ const i=document.getElementById('nmName'); if(i) i.focus(); },50);
+  } else if(modalState.step==='name'){
+    sheet.innerHTML = `
+      <div class="modal-header"><h3>${modalState.label} جدید</h3><button class="btn-icon" onclick="closeModal()">✕</button></div>
+      <div class="field"><label>اسمش چیه؟</label><input type="text" id="modalNameInput" placeholder="مثلا ${modalState.label} شکلاتی" value="${modalState.name}"></div>
+      <div class="field"><label>ضریب سود (مثلا 2.87)</label><input type="number" step="0.01" id="modalMargin" value="${modalState.margin}"></div>
+      ${modalState.key==='donuts'?`<div class="checkbox-row"><input type="checkbox" id="modalUseBase" ${modalState.useBase?'checked':''}><label for="modalUseBase">قیمت یک عدد بیس دونات هم در هزینه حساب بشه</label></div>`:''}
+      <button class="btn block" onclick="modalConfirmName()">ادامه — انتخاب مواد</button>
+    `;
+    setTimeout(()=>{ const inp=document.getElementById('modalNameInput'); if(inp) inp.focus(); },50);
+
+  } else if(modalState.step==='select'){
+    sheet.innerHTML = `
+      <div class="modal-header"><h3>انتخاب مواد و پرسنل</h3><button class="btn-icon" onclick="closeModal()">✕</button></div>
+      <input type="text" id="pickerSearch" placeholder="🔍 جستجو در همه مواد..." value="${modalState.q||''}" oninput="modalState.q=this.value; refreshPicker()" style="margin-bottom:10px;">
+      <div class="picker-tabs" id="pickerTabs"></div>
+      <div class="picker-list" id="pickerList"></div>
+      <div class="hint" style="margin-top:10px;" id="pickerCount"></div>
+      <button class="btn block" id="pickerNext" onclick="modalGoToAmounts()">ادامه</button>
+    `;
+    refreshPicker();
+
+  } else if(modalState.step==='amount'){
+    const sel = modalState.selected[modalState.amountIdx];
+    const label = modalItemLabel(sel);
+    const isLast = modalState.amountIdx === modalState.selected.length-1;
+    sheet.innerHTML = `
+      <div class="modal-header"><h3>وارد کردن مقدار</h3><button class="btn-icon" onclick="closeModal()">✕</button></div>
+      <div class="amount-step">
+        <div class="progress">مورد ${modalState.amountIdx+1} از ${modalState.selected.length}</div>
+        <div class="item-name">${label}</div>
+        <input type="number" id="modalAmountInput" placeholder="مقدار" value="${modalState.amounts[modalState.amountIdx]||''}">
+      </div>
+      <div class="hint" style="text-align:center;">${sel.refType==='material'?'مقدار را با همان واحد خرید وارد کن':'مقدار را به ساعت وارد کن'}</div>
+      <div class="row" style="margin-top:10px;">
+        ${modalState.amountIdx>0?`<button class="btn secondary" style="flex:1;" onclick="modalPrevAmount()">قبلی</button>`:''}
+        <button class="btn" style="flex:2;" onclick="modalNextAmount()">${isLast?'ثبت نهایی':'بعدی'}</button>
+      </div>
+    `;
+    setTimeout(()=>{ const inp=document.getElementById('modalAmountInput'); if(inp) inp.focus(); },50);
+  }
+}
+
+function modalConfirmName(){
+  const v = document.getElementById('modalNameInput').value.trim();
+  if(!v) return;
+  modalState.name = v;
+  modalState.margin = num(document.getElementById('modalMargin').value) || 2.87;
+  const cb = document.getElementById('modalUseBase'); if(cb) modalState.useBase = cb.checked;
+  modalState.step = 'select';
+  renderModal();
+}
+function modalGoToAmounts(){
+  if(modalState.selected.length===0) return;
+  modalState.step='amount';
+  modalState.amountIdx=0;
+  modalState.amounts=[];
+  renderModal();
+}
+function saveCurrentAmount(){
+  const inp = document.getElementById('modalAmountInput');
+  if(inp) modalState.amounts[modalState.amountIdx] = inp.value;
+}
+function modalPrevAmount(){
+  saveCurrentAmount();
+  modalState.amountIdx = Math.max(0, modalState.amountIdx-1);
+  renderModal();
+}
+function modalNextAmount(){
+  saveCurrentAmount();
+  if(modalState.amountIdx < modalState.selected.length-1){
+    modalState.amountIdx++;
+    renderModal();
+  }else{
+    finalizeModal();
+  }
+}
+function finalizeModal(){
+  const items = modalState.selected
+    .map((s,i)=>({refType:s.refType, refId:s.refId, amount:num(modalState.amounts[i])}))
+    .filter(it=>it.amount>0);
+  if(modalState.mode==='newRecipe'){
+    state[modalState.key].push({id:uid(), name:modalState.name, items, useBase:!!modalState.useBase, margin:modalState.margin||2.87});
+  }else{
+    if(modalState.key==='base'){
+      state.base.items.push(...items);
+    }else{
+      const r = state[modalState.key].find(x=>x.id===modalState.recipeId);
+      if(r) r.items.push(...items);
+    }
+  }
+  saveState();
+  modalState = null;
+  document.getElementById('modalOverlay').style.display='none';
+  render();
+}
+
+/* ============ BACKUP PANEL ============ */
+function toggleBackup(){
+  const panel = document.getElementById('backupPanel');
+  const opening = panel.style.display === 'none';
+  panel.style.display = opening ? 'block' : 'none';
+  if(opening){
+    document.getElementById('backupOut').value = JSON.stringify(state);
+  }
+}
+function copyBackup(){
+  const ta = document.getElementById('backupOut');
+  ta.select();
+  try{
+    navigator.clipboard.writeText(ta.value);
+  }catch(e){
+    document.execCommand('copy');
+  }
+  const btn = event.target;
+  const old = btn.textContent;
+  btn.textContent = '✅ کپی شد';
+  setTimeout(()=>{ btn.textContent = old; }, 1200);
+}
+function restoreBackup(){
+  const raw = document.getElementById('backupIn').value.trim();
+  if(!raw) return;
+  try{
+    const parsed = JSON.parse(raw);
+    state = Object.assign({materials:{qanadi:[],plastic:[],other:[]}, labor:[], base:{items:[],yield:1}, donuts:[], hotDrinks:[], coldDrinks:[]}, parsed);
+    migrateMaterials();
+    saveState();
+    render();
+    document.getElementById('backupIn').value = '';
+    alert('بازیابی شد ✅');
+  }catch(e){
+    alert('این متن معتبر نیست، دوباره چک کن که کامل کپی شده باشه.');
+  }
+}
+
+/* ============ INIT ============ */
+loadState();
+</script>
+</body>
+</html>
